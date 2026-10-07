@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sổ Tay Lệnh Git & GitHub Toàn Diện | Rikkei Academy</title>
+  <meta name="description" content="Tài liệu tra cứu các câu lệnh Git thông dụng, cú pháp chi tiết, ví dụ thực chiến và mẹo xử lý sự cố trong dự án phần mềm.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              500: '#f43f5e',
+              600: '#e11d48',
+              700: '#be123c',
+              800: '#9f1239',
+              900: '#881337',
+            },
+            git: {
+              orange: '#f05032',
+              dark: '#0d1117',
+              canvas: '#161b22',
+              border: '#30363d',
+              accent: '#58a6ff'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+    .glow-effect {
+      box-shadow: 0 0 50px -12px rgba(240, 80, 50, 0.25);
+    }
+    .glass-card {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .flow-line {
+      background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b, #ef4444);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen selection:bg-git-orange selection:text-white transition-colors duration-300">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-red-900/60 via-orange-950/60 to-slate-900 border-b border-red-500/20 py-2 px-4 text-xs sm:text-sm text-center text-slate-300 flex items-center justify-center gap-2">
+    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-git-orange/20 text-git-orange border border-git-orange/30">
+      ⚡ Git Pro Guide
+    </span>
+    <span>Sổ tay tra cứu lệnh Git dành cho Lập trình viên & Dự án nhóm</span>
+    <span class="hidden md:inline text-slate-500">•</span>
+    <span class="hidden md:inline text-slate-400">Rikkei Academy / Dev Team</span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-git-orange to-red-500 flex items-center justify-center shadow-lg shadow-git-orange/25 group-hover:scale-105 transition-transform duration-200">
+          <!-- Git SVG Logo -->
+          <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21.62 10.45l-8.07-8.07a2.44 2.44 0 0 0-3.45 0L8.27 4.21l3.07 3.07a2.9 2.9 0 0 1 3.69 3.69l3 3a2.9 2.9 0 1 1-1.22 1.22l-2.82-2.82v4.88a2.9 2.9 0 1 1-1.74 0V12.1a2.88 2.88 0 0 1-1.52-1.52L6.85 8.71 2.38 13.18a2.44 2.44 0 0 0 0 3.45l8.07 8.07a2.44 2.44 0 0 0 3.45 0l7.72-7.72a2.44 2.44 0 0 0 0-3.45z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+            GitMaster <span class="text-xs px-2 py-0.5 rounded bg-red-500/10 text-red-400 font-semibold border border-red-500/20">CheatSheet</span>
+          </span>
+          <span class="text-[11px] text-slate-400 block -mt-0.5">Sổ tay lệnh Git & GitHub thực chiến</span>
+        </div>
+      </a>
+
+      <!-- Search in header for desktop -->
+      <div class="relative flex-1 max-w-md hidden md:block">
+        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <input 
+          id="globalSearchInput" 
+          type="text" 
+          placeholder="Tìm nhanh lệnh (vd: commit, merge, stash, reset, restore...)" 
+          class="w-full pl-10 pr-12 py-2 bg-slate-900/90 text-sm rounded-xl border border-slate-700/80 focus:border-git-orange focus:ring-2 focus:ring-git-orange/20 text-slate-200 placeholder-slate-500 outline-none transition-all shadow-inner"
+        >
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+          <kbd class="px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-slate-800 border border-slate-700 rounded shadow-sm">Ctrl K</kbd>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" title="Chuyển chế độ sáng/tối" class="p-2 rounded-xl border border-slate-800 bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white transition-all">
+          <svg id="themeIconDark" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+          <svg id="themeIconLight" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </button>
+        <a href="#workflow-section" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-900 border border-slate-700/80 text-slate-300 hover:text-white hover:border-slate-600 transition-all">
+          <span>Luồng Git</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </a>
+        <a href="#emergency-section" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600/30 hover:text-white transition-all shadow-sm">
+          <span>🚨 Cứu nguy</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Search Bar (Only visible on small screens) -->
+  <div class="p-4 md:hidden border-b border-slate-800 bg-slate-950">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <input 
+        id="mobileSearchInput" 
+        type="text" 
+        placeholder="Tìm lệnh Git (commit, push, branch, stash...)" 
+        class="w-full pl-9 pr-4 py-2.5 bg-slate-900 text-sm rounded-xl border border-slate-700 text-slate-100 placeholder-slate-500 outline-none focus:border-git-orange"
+      >
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden pt-12 pb-16 lg:pt-16 lg:pb-20">
+    <!-- Background Glows -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-git-orange/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute top-1/3 right-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-700/80 text-xs font-semibold text-slate-300 shadow-sm mb-6">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Hệ thống phân phối mã nguồn phân tán (Distributed VCS)</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+          Làm Chủ Các Lệnh <span class="bg-gradient-to-r from-git-orange via-red-500 to-amber-400 bg-clip-text text-transparent">Git & GitHub</span>
+        </h1>
+        <p class="text-base sm:text-lg text-slate-300 leading-relaxed mb-8">
+          Tra cứu nhanh cú pháp, bản chất hoạt động của từng câu lệnh, ví dụ trực quan và các thủ thuật giải quyết conflict, cứu vãn commit trong quá trình làm việc nhóm.
+        </p>
+
+        <!-- Stats Bar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl mx-auto text-left">
+          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+            <div class="text-2xl font-bold text-white font-mono">40+</div>
+            <div class="text-xs text-slate-400 mt-1">Câu lệnh đầy đủ</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+            <div class="text-2xl font-bold text-git-orange font-mono">7 Nhóm</div>
+            <div class="text-xs text-slate-400 mt-1">Chủ đề phân loại</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+            <div class="text-2xl font-bold text-emerald-400 font-mono">100%</div>
+            <div class="text-xs text-slate-400 mt-1">Ví dụ thực tế</div>
+          </div>
+          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-sm">
+            <div class="text-2xl font-bold text-amber-400 font-mono">1 Click</div>
+            <div class="text-xs text-slate-400 mt-1">Copy lệnh tức thì</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Visual Git Architecture (4 Khu Vực Của Git) -->
+  <section id="workflow-section" class="py-12 border-y border-slate-800/70 bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-git-orange">Mô Hình Cốt Lõi</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">4 Khu Vực Hoạt Động Của Git</h2>
+          <p class="text-sm text-slate-400 mt-1">Hiểu rõ cách dữ liệu di chuyển giữa các vùng lưu trữ</p>
+        </div>
+        <div class="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-800 inline-flex items-center gap-2 self-start md:self-auto">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span> Working Dir &rarr; Staging &rarr; Local Repo &rarr; Remote
+        </div>
+      </div>
+
+      <!-- 4 Stages Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+        <!-- Stage 1 -->
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 relative overflow-hidden group hover:border-blue-500/50 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-mono font-bold text-sm mb-3">1</div>
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            Working Directory
+          </h3>
+          <p class="text-xs text-slate-400 mt-2 mb-4 leading-relaxed">
+            Thư mục làm việc trên máy tính bạn đang sửa mã nguồn (Untracked / Modified files).
+          </p>
+          <div class="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-blue-400">
+            &rarr; Dùng <span class="text-white font-semibold">git add</span> chuyển sang Stage 2
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 relative overflow-hidden group hover:border-emerald-500/50 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-mono font-bold text-sm mb-3">2</div>
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            Staging Area (Index)
+          </h3>
+          <p class="text-xs text-slate-400 mt-2 mb-4 leading-relaxed">
+            Vùng chuẩn bị để gom các thay đổi trước khi đóng gói thành 1 commit chính thức.
+          </p>
+          <div class="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-emerald-400">
+            &rarr; Dùng <span class="text-white font-semibold">git commit</span> đóng gói vào Stage 3
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 relative overflow-hidden group hover:border-amber-500/50 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold text-sm mb-3">3</div>
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            Local Repository
+          </h3>
+          <p class="text-xs text-slate-400 mt-2 mb-4 leading-relaxed">
+            Kho lưu trữ cục bộ (.git) đã lưu trữ đầy đủ lịch sử commit và các branch trên máy.
+          </p>
+          <div class="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-amber-400">
+            &rarr; Dùng <span class="text-white font-semibold">git push</span> đẩy lên Stage 4
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="rounded-2xl bg-slate-900/80 border border-slate-800 p-5 relative overflow-hidden group hover:border-purple-500/50 transition-all">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-mono font-bold text-sm mb-3">4</div>
+          <h3 class="font-bold text-white text-base flex items-center gap-2">
+            Remote Repository
+          </h3>
+          <p class="text-xs text-slate-400 mt-2 mb-4 leading-relaxed">
+            Kho lưu trữ trên máy chủ đám mây (GitHub, GitLab, Bitbucket) để chia sẻ cùng team.
+          </p>
+          <div class="pt-3 border-t border-slate-800/80 text-[11px] font-mono text-purple-400">
+            &larr; Dùng <span class="text-white font-semibold">git pull / fetch</span> lấy về máy
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter & Main Content Section -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Category Filter Tabs -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+          <span>Danh mục lệnh</span>
+          <span id="activeCountBadge" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">Đang hiển thị: 0 lệnh</span>
+        </h2>
+        <button id="resetFilterBtn" class="text-xs text-slate-400 hover:text-white underline hidden">Xóa bộ lọc</button>
+      </div>
+
+      <div class="flex flex-wrap gap-2" id="filterButtonsContainer">
+        <button class="filter-btn active px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-git-orange text-white shadow-md shadow-git-orange/20" data-category="all">
+          🔥 Tất cả
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="init">
+          🚀 Khởi tạo & Cấu hình
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="basic">
+          📝 Thao tác cơ bản
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="branch">
+          🌿 Nhánh & Hợp nhất
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="remote">
+          ☁️ Remote & GitHub
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="undo">
+          ⏪ Hoàn tác & Hủy
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="stash">
+          📦 Lưu tạm (Stash)
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="inspect">
+          🔍 So sánh & Điều tra
+        </button>
+        <button class="filter-btn px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800" data-category="advanced">
+          ⚡ Nâng cao & Team
+        </button>
+      </div>
+    </div>
+
+    <!-- Commands Cards Grid -->
+    <div id="commandsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      
+      <!-- ITEM: git init -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="init" data-keywords="init khoi tao kho chua repository .git local">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">Khởi tạo</span>
+            <span class="text-xs text-slate-500 font-mono">Bắt buộc khi bắt đầu</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git init
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Khởi tạo một Git repository trống ngay tại thư mục hiện tại. Git sẽ tạo ra thư mục ẩn <code class="text-amber-300">.git</code> chứa toàn bộ metadata và cơ sở dữ liệu.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800 group">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git init</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git init">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Chỉ cần chạy 1 lần duy nhất khi tạo dự án mới.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git clone -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="init" data-keywords="clone sao chep github download clone repo">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">Khởi tạo</span>
+            <span class="text-xs text-slate-500 font-mono">Kéo dự án có sẵn</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git clone
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Sao chép toàn bộ một kho mã nguồn từ GitHub hoặc remote server về máy tính cục bộ, bao gồm tất cả commit history và branch.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git clone &lt;repo-url&gt;</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git clone https://github.com/user/repo.git">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Thêm tên thư mục ở cuối nếu muốn đổi tên thư mục tải về: <code class="text-slate-300">git clone &lt;url&gt; my-folder</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git config -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="init" data-keywords="config cau hinh user.name user.email global">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">Cấu hình</span>
+            <span class="text-xs text-slate-500 font-mono">Thông tin tác giả</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git config
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Thiết lập thông tin tên và email của bạn. Git sẽ gắn nhãn này vào từng commit để mọi người trong nhóm biết ai đã viết code.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git config --global user.name "Tên"</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git config --global user.name &quot;Your Name&quot; &amp;&amp; git config --global user.email &quot;you@example.com&quot;">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dùng <code class="text-slate-300">git config --list</code> để xem lại toàn bộ cấu hình máy.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git status -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="basic" data-keywords="status kiem tra trang thai thay doi file modified untracked staged">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Cơ bản</span>
+            <span class="text-xs text-emerald-400 font-mono">Dùng nhiều nhất ⭐</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git status
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Xem trạng thái các tệp tin trong Working Directory và Staging Area: file nào chưa được theo dõi (Untracked), file nào đã sửa, file nào sẵn sàng commit.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git status</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git status">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dùng <code class="text-slate-300">git status -s</code> để xem dạng thu gọn (short format) dễ nhìn hơn.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git add -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="basic" data-keywords="add them stage staging area git add . git add -A">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Cơ bản</span>
+            <span class="text-xs text-slate-500 font-mono">Stage thay đổi</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git add
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Đưa các file đã sửa đổi từ Working Directory vào Staging Area để chuẩn bị đóng gói vào lần commit tiếp theo.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git add .</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git add .">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dấu chấm <code class="text-slate-300">.</code> là thêm tất cả thay đổi, hoặc chỉ định tên file: <code class="text-slate-300">git add app.js</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git commit -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="basic" data-keywords="commit luu dong goi message -m snapshot">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider">Cơ bản</span>
+            <span class="text-xs text-slate-500 font-mono">Tạo snapshot</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git commit
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Lưu lại toàn bộ nội dung trong Staging Area thành 1 phiên bản chính thức (commit) đi kèm thông điệp mô tả những việc bạn vừa làm.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git commit -m "feat: login"</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git commit -m &quot;feat: your commit message&quot;">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Quy tắc Conventional Commits: <code class="text-slate-300">feat:</code>, <code class="text-slate-300">fix:</code>, <code class="text-slate-300">docs:</code>, <code class="text-slate-300">refactor:</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git commit --amend -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="basic" data-keywords="amend sua commit quen sua noi dung">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">Cơ bản</span>
+            <span class="text-xs text-amber-400 font-mono">Sửa commit gần nhất</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git commit --amend
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Sửa lại message của commit gần nhất hoặc gộp thêm các file vừa sửa vào commit trước mà không tạo thêm commit rác mới.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git commit --amend -m "mới"</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git commit --amend -m &quot;New message&quot;">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-rose-400">⚠️ Chú ý:</span> Chỉ dùng khi commit CHƯA được push lên remote chung.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git branch -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="branch" data-keywords="branch nhanh xem danh sach tao nhanh xoa nhanh -d -a">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-wider">Phân nhánh</span>
+            <span class="text-xs text-slate-500 font-mono">Quản lý Branch</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git branch
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Xem danh sách tất cả các nhánh hiện có trong repo nội bộ. Nhánh có dấu <code class="text-emerald-400">*</code> là nhánh bạn đang đứng.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git branch -a</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git branch -a">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Xóa nhánh đã merge: <code class="text-slate-300">git branch -d &lt;tên&gt;</code>, ép xóa: <code class="text-slate-300">-D</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git switch / checkout -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="branch" data-keywords="switch checkout chuyen nhanh tao nhanh moi -c -b">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-wider">Phân nhánh</span>
+            <span class="text-xs text-slate-500 font-mono">Chuyển đổi nhánh</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git switch / checkout
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Chuyển không gian làm việc sang một nhánh khác. Lệnh mới khuyên dùng: <code class="text-purple-300">git switch</code> (rõ ràng hơn lệnh checkout cũ).
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git switch -c feature/login</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git switch -c feature/new-feature">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> <code class="text-slate-300">-c</code> (hoặc <code class="text-slate-300">-b</code>) giúp tạo nhánh mới và lập tức nhảy sang nhánh đó.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git merge -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="branch" data-keywords="merge hop nhat nhap nhanh gop conflict">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-wider">Hợp nhất</span>
+            <span class="text-xs text-slate-500 font-mono">Gộp tính năng</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git merge
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Hợp nhất các commit từ nhánh chỉ định vào nhánh hiện tại mà bạn đang đứng (thường là merge nhánh tính năng vào <code class="text-amber-300">main</code> hoặc <code class="text-amber-300">develop</code>).
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git merge feature/login</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git merge feature/branch-name">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Luôn <code class="text-slate-300">git pull</code> nhánh đích trước khi thực hiện merge để giảm thiểu xung đột.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git rebase -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="branch" data-keywords="rebase sap xep lich su lam thang cay commit interactive -i">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-400 border border-purple-500/20 uppercase tracking-wider">Hợp nhất</span>
+            <span class="text-xs text-amber-400 font-mono">Làm sạch lịch sử</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git rebase
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Đặt các commit của nhánh hiện tại lên trên đỉnh của một nhánh khác, tạo lịch sử commit thẳng hàng, đẹp và không sinh ra commit merge thừa.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git rebase main</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git rebase main">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-rose-400">⚠️ Vàng ngọc:</span> Tuyệt đối KHÔNG rebase trên các nhánh public/chung (như main, dev).
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git remote -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="remote" data-keywords="remote lien ket github origin add -v">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-wider">Remote</span>
+            <span class="text-xs text-slate-500 font-mono">Quản lý kết nối</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git remote
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Xem và cấu hình liên kết giữa kho lưu trữ trên máy với các kho chứa từ xa (remote) trên GitHub, GitLab, Bitbucket.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git remote -v</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git remote -v">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Thêm remote:</span> <code class="text-slate-300">git remote add origin &lt;url&gt;</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git push -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="remote" data-keywords="push day code len github origin -u upstream">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-wider">Remote</span>
+            <span class="text-xs text-sky-400 font-mono">Đẩy lên Server ⭐</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git push
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Đẩy toàn bộ commit từ nhánh cục bộ lên nhánh tương ứng trên remote repository (GitHub).
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git push -u origin &lt;branch&gt;</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git push -u origin main">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Tham số <code class="text-slate-300">-u</code> (upstream) chỉ cần dùng lần đầu. Các lần sau chỉ cần gõ <code class="text-slate-300">git push</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git pull -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="remote" data-keywords="pull keo code dong bo cap nhat fetch merge">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-wider">Remote</span>
+            <span class="text-xs text-sky-400 font-mono">Đồng bộ về máy ⭐</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git pull
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Kéo các commit mới nhất do đồng nghiệp đẩy lên remote về máy bạn và tự động gộp (merge) thẳng vào nhánh bạn đang đứng.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git pull origin main</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git pull origin main">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Bản chất:</span> <code class="text-slate-300">git pull</code> tương đương với chạy <code class="text-slate-300">git fetch</code> rồi tiếp tục <code class="text-slate-300">git merge</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git fetch -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="remote" data-keywords="fetch kiem tra commit moi an toan khong merge">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-wider">Remote</span>
+            <span class="text-xs text-slate-500 font-mono">Tải an toàn</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git fetch
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Tải toàn bộ thông tin các commit và branch mới trên remote về máy nhưng CHƯA gộp vào code đang viết, giúp bạn kiểm tra trước khi quyết định merge.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git fetch origin</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git fetch origin">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dùng <code class="text-slate-300">git fetch -p</code> (prune) để tự động dọn dẹp các nhánh đã bị xóa trên GitHub.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git restore -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="undo" data-keywords="restore huy sua unstage bo thay doi khoi phuc file">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-wider">Hoàn tác</span>
+            <span class="text-xs text-rose-400 font-mono">Cực kỳ hữu ích ⭐</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git restore
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Khôi phục lại nội dung file về trạng thái trước đó. Có thể dùng để hủy chỉnh sửa ở Working Directory hoặc đưa file ra khỏi Staging Area.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git restore --staged &lt;file&gt;</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git restore --staged .">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Hủy sửa file:</span> <code class="text-slate-300">git restore filename</code> (sẽ bỏ mọi thay đổi chưa staged).
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git reset -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="undo" data-keywords="reset quay lai commit truoc --soft --hard --mixed head">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-wider">Hoàn tác</span>
+            <span class="text-xs text-amber-400 font-mono">Quay lại quá khứ</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git reset
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Di chuyển HEAD về một commit trước đó. Có 3 chế độ: <code class="text-emerald-400">--soft</code> (giữ code đã staged), <code class="text-amber-400">--mixed</code> (giữ code nhưng unstaged), <code class="text-rose-400">--hard</code> (xóa sạch mọi sửa đổi).
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git reset --soft HEAD~1</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git reset --soft HEAD~1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-rose-400">⚠️ Cảnh báo:</span> <code class="text-rose-300">--hard</code> làm mất code vĩnh viễn nếu chưa commit vào Git!
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git revert -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="undo" data-keywords="revert dao nguoc commit an toan cho team public">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-wider">Hoàn tác</span>
+            <span class="text-xs text-emerald-400 font-mono">An toàn cho Team</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git revert
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Tạo một commit MỚI có nội dung đảo ngược lại hoàn toàn so với commit được chỉ định. Không viết lại lịch sử, an toàn khi nhánh đã push lên GitHub.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git revert &lt;commit-hash&gt;</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git revert HEAD">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dùng <code class="text-slate-300">git revert HEAD</code> để đảo ngược commit vừa tạo ngay lập tức.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git stash -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="stash" data-keywords="stash cat tam luu ngan keo pop apply list drop clear">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 uppercase tracking-wider">Lưu tạm</span>
+            <span class="text-xs text-amber-400 font-mono">Cứu tinh dở việc</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git stash
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Cất toàn bộ các đoạn mã đang viết dở vào một ngăn kéo bí mật để trả về working directory sạch sẽ (giúp bạn chuyển nhánh fix bug khẩn cấp).
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git stash push -m "wip"</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git stash push -m &quot;WIP: đang làm dở tính năng&quot;">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Lấy lại code:</span> <code class="text-slate-300">git stash pop</code> (lấy ra và xóa khỏi ngăn kéo).
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git log -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="inspect" data-keywords="log xem lich su cay commit oneline graph all">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-400 border border-teal-500/20 uppercase tracking-wider">Điều tra</span>
+            <span class="text-xs text-slate-500 font-mono">Xem lịch sử</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git log
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Xem lại toàn bộ lịch sử các commit đã thực hiện: mã băm SHA, tác giả, thời gian tạo và thông điệp commit.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git log --oneline --graph</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git log --oneline --graph --all">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Lệnh VIP:</span> <code class="text-slate-300">git log --oneline --graph --all</code> hiển thị cây nhánh siêu đẹp.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git diff -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="inspect" data-keywords="diff so sanh thay doi dong code green red staged">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-400 border border-teal-500/20 uppercase tracking-wider">Điều tra</span>
+            <span class="text-xs text-slate-500 font-mono">So sánh khác biệt</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git diff
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Hiển thị chính xác từng dòng code đã được thêm (+) hoặc bớt (-) giữa file đang sửa và phiên bản lưu trong Git.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git diff --staged</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git diff --staged">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Mẹo:</span> Dùng <code class="text-slate-300">--staged</code> để soi những gì bạn chuẩn bị commit.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git reflog -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="inspect" data-keywords="reflog phao cuu sinh tim commit da mat head di chuyen">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-wider">Cứu mạng</span>
+            <span class="text-xs text-rose-400 font-mono">Phao cứu sinh ⭐⭐⭐</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git reflog
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Nhật ký theo dõi mọi bước di chuyển của con trỏ HEAD. Ngay cả khi bạn lỡ xóa nhánh hay reset hard mất commit, <code class="text-rose-400">reflog</code> vẫn lưu lại hash để khôi phục!
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git reflog</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git reflog">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-emerald-400">💡 Hồi sinh code:</span> Sau khi tìm thấy SHA, gõ <code class="text-slate-300">git reset --hard HEAD@{n}</code>.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git cherry-pick -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="advanced" data-keywords="cherry pick boc commit lay commit rieng le">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">Nâng cao</span>
+            <span class="text-xs text-indigo-400 font-mono">Bốc commit</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git cherry-pick
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Chọn duy nhất một commit cụ thể từ nhánh khác và áp dụng vào nhánh hiện tại mà không cần phải merge toàn bộ cả nhánh đó.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git cherry-pick &lt;commit-hash&gt;</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git cherry-pick <hash>">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Ứng dụng:</span> Bốc một bản vá hotfix vừa commit ở dev đưa gấp vào nhánh release.
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM: git tag -->
+      <div class="cmd-card rounded-2xl bg-slate-900/80 border border-slate-800 p-5 flex flex-col justify-between hover:border-slate-700 hover:shadow-xl transition-all" data-category="advanced" data-keywords="tag danh dau phien ban release v1.0.0">
+        <div>
+          <div class="flex items-center justify-between gap-2 mb-2">
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">Nâng cao</span>
+            <span class="text-xs text-slate-500 font-mono">Phiên bản Release</span>
+          </div>
+          <h3 class="font-bold text-lg text-white font-mono flex items-center gap-2">
+            git tag
+          </h3>
+          <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+            Đánh dấu mốc phiên bản phát hành sản phẩm (ví dụ: v1.0.0, v2.1.0) để tiện theo dõi các đợt release và triển khai production.
+          </p>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800/80">
+          <div class="bg-slate-950 rounded-xl p-2.5 font-mono text-xs flex items-center justify-between border border-slate-800">
+            <code class="text-emerald-400 overflow-x-auto whitespace-nowrap">git tag -a v1.0.0 -m "Release"</code>
+            <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all" title="Sao chép" data-copy="git tag -a v1.0.0 -m &quot;Release version 1.0.0&quot; &amp;&amp; git push origin --tags">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+            </button>
+          </div>
+          <div class="mt-2 text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="text-amber-400">💡 Đẩy tag:</span> Chạy <code class="text-slate-300">git push origin --tags</code> để đẩy tag lên GitHub.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Empty State When Search Not Found -->
+    <div id="noResultsState" class="hidden py-16 text-center">
+      <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto mb-4 text-slate-500">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </div>
+      <h3 class="text-lg font-bold text-white">Không tìm thấy câu lệnh phù hợp</h3>
+      <p class="text-sm text-slate-400 mt-1">Hãy thử tìm từ khóa khác (ví dụ: commit, branch, merge, reset, stash...)</p>
+      <button onclick="clearSearchAndFilters()" class="mt-4 px-4 py-2 text-xs font-semibold rounded-xl bg-git-orange text-white hover:bg-orange-600 transition-all">
+        Hiển thị lại toàn bộ
+      </button>
+    </div>
+  </main>
+
+  <!-- Emergency & FAQ Section (Cứu Nguy Thực Chiến) -->
+  <section id="emergency-section" class="py-16 bg-slate-900/60 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center mb-12">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20 mb-3">
+          🚨 Tình Huống Cấp Cứu
+        </span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Xử Lý Các Lỗi Hay Gặp Khi Làm Việc Nhóm</h2>
+        <p class="text-sm text-slate-400 mt-2">Bí kíp gỡ rối từng bước nhanh chóng, an toàn và không mất dữ liệu</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        <!-- Scenario 1 -->
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
+              <span>⚠️ Tình huống 1:</span> Lỡ gõ sai thông điệp commit vừa rồi
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Bạn vừa gõ <code class="text-amber-300">git commit -m "conmit loi"</code> và muốn đổi lại tên chuẩn mà không muốn sinh thêm 1 commit sửa lỗi vô nghĩa.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <div class="bg-slate-900 p-2.5 rounded-xl font-mono text-xs text-emerald-400 flex items-center justify-between">
+              <code>git commit --amend -m "feat: tên commit chuẩn"</code>
+              <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-copy="git commit --amend -m &quot;feat: tên commit chuẩn&quot;">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
+              <span>⚠️ Tình huống 2:</span> Đang code dở thì sếp bắt chuyển nhánh fix bug
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Nếu chuyển nhánh ngay sẽ bị báo lỗi do có file chưa commit. Hãy cất vào stash rồi sau đó lấy ra lại.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <div class="bg-slate-900 p-2.5 rounded-xl font-mono text-xs text-emerald-400 flex items-center justify-between">
+              <code>git stash &amp;&amp; git switch hotfix &amp;&amp; ... &amp;&amp; git stash pop</code>
+              <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-copy="git stash">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scenario 3 -->
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
+              <span>⚠️ Tình huống 3:</span> Xử lý Merge Conflict (Xung đột mã nguồn)
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Khi hai người cùng sửa một dòng code, Git sẽ chèn các đánh dấu <code class="text-amber-300">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <code class="text-amber-300">=======</code> và <code class="text-amber-300">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>.
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-400 space-y-1">
+            <div>1. Mở file xung đột, chọn giữ đoạn code chính xác.</div>
+            <div>2. Lưu file lại và chạy <code class="text-emerald-400 font-mono">git add &lt;file&gt;</code>.</div>
+            <div>3. Hoàn tất bằng lệnh <code class="text-emerald-400 font-mono">git commit -m "fix: resolve conflict"</code>.</div>
+          </div>
+        </div>
+
+        <!-- Scenario 4 -->
+        <div class="rounded-2xl bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-rose-400 font-bold text-sm mb-2">
+              <span>⚠️ Tình huống 4:</span> Lỡ chạy <code class="text-rose-400 font-mono">git reset --hard</code> làm mất code
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Đừng hoảng loạn! Git luôn lưu dấu vết mọi hành động trong nhật ký ẩn <code class="text-emerald-400 font-mono">reflog</code>. Bạn có thể quay ngược thời gian:
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800">
+            <div class="bg-slate-900 p-2.5 rounded-xl font-mono text-xs text-emerald-400 flex items-center justify-between">
+              <code>git reflog &rarr; git reset --hard HEAD@{1}</code>
+              <button class="copy-btn ml-2 p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300" data-copy="git reflog">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs text-center">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-git-orange flex items-center justify-center text-white font-bold text-xs">G</div>
+        <span class="font-bold text-slate-200">GitMaster Cheatsheet</span>
+        <span>• Tài liệu đào tạo nội bộ</span>
+      </div>
+      <div>
+        Được biên soạn chu đáo dành riêng cho các thành viên dự án & sinh viên Rikkei
+      </div>
+      <div class="text-slate-500 font-mono">
+        Happy Coding & No Conflicts! 🚀
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification (Copy success) -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2.5 bg-emerald-500 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-2xl">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toastMessage">Đã sao chép lệnh vào clipboard!</span>
+  </div>
+
+  <!-- Interactive JavaScript Logic -->
+  <script>
+    // State
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    const cards = document.querySelectorAll('.cmd-card');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const globalSearchInput = document.getElementById('globalSearchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    const activeCountBadge = document.getElementById('activeCountBadge');
+    const noResultsState = document.getElementById('noResultsState');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    // Filter Logic
+    function updateVisibility() {
+      let visibleCount = 0;
+      const q = searchQuery.toLowerCase().trim();
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const keywords = card.getAttribute('data-keywords') || '';
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const text = card.textContent.toLowerCase();
+
+        const matchesCat = (activeCategory === 'all' || cat === activeCategory);
+        const matchesSearch = !q || title.includes(q) || keywords.toLowerCase().includes(q) || text.includes(q);
+
+        if (matchesCat && matchesSearch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update badge
+      activeCountBadge.textContent = `Đang hiển thị: ${visibleCount} lệnh`;
+
+      // Show/hide empty state
+      if (visibleCount === 0) {
+        noResultsState.classList.remove('hidden');
+      } else {
+        noResultsState.classList.add('hidden');
+      }
+
+      // Reset button visibility
+      if (activeCategory !== 'all' || searchQuery !== '') {
+        resetFilterBtn.classList.remove('hidden');
+      } else {
+        resetFilterBtn.classList.add('hidden');
+      }
+    }
+
+    // Category button click
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.classList.remove('active', 'bg-git-orange', 'text-white', 'shadow-md', 'shadow-git-orange/20');
+          b.classList.add('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+        });
+
+        btn.classList.add('active', 'bg-git-orange', 'text-white', 'shadow-md', 'shadow-git-orange/20');
+        btn.classList.remove('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+
+        activeCategory = btn.getAttribute('data-category');
+        updateVisibility();
+      });
+    });
+
+    // Search input handlers
+    function handleSearch(val) {
+      searchQuery = val;
+      if (globalSearchInput.value !== val) globalSearchInput.value = val;
+      if (mobileSearchInput.value !== val) mobileSearchInput.value = val;
+      updateVisibility();
+    }
+
+    globalSearchInput.addEventListener('input', (e) => handleSearch(e.target.value));
+    mobileSearchInput.addEventListener('input', (e) => handleSearch(e.target.value));
+
+    // Keyboard shortcut (Ctrl + K or / to focus search)
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && document.activeElement !== globalSearchInput && document.activeElement !== mobileSearchInput)) {
+        e.preventDefault();
+        globalSearchInput.focus();
+        globalSearchInput.select();
+      } else if (e.key === 'Escape') {
+        clearSearchAndFilters();
+      }
+    });
+
+    function clearSearchAndFilters() {
+      searchQuery = '';
+      globalSearchInput.value = '';
+      mobileSearchInput.value = '';
+      activeCategory = 'all';
+
+      filterButtons.forEach(b => {
+        b.classList.remove('active', 'bg-git-orange', 'text-white', 'shadow-md', 'shadow-git-orange/20');
+        b.classList.add('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+        if (b.getAttribute('data-category') === 'all') {
+          b.classList.add('active', 'bg-git-orange', 'text-white', 'shadow-md', 'shadow-git-orange/20');
+          b.classList.remove('bg-slate-900', 'text-slate-300', 'border', 'border-slate-800');
+        }
+      });
+
+      updateVisibility();
+    }
+
+    resetFilterBtn.addEventListener('click', clearSearchAndFilters);
+
+    // Copy to clipboard
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const text = btn.getAttribute('data-copy');
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(`Đã sao chép: ${text}`);
+          
+          // Visual pulse on the button
+          const original = btn.innerHTML;
+          btn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+          setTimeout(() => {
+            btn.innerHTML = original;
+          }, 1500);
+        }).catch(err => {
+          showToast('Không thể sao chép tự động!');
+        });
+      });
+    });
+
+    function showToast(msg) {
+      toastMessage.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // Light / Dark Theme Toggle
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIconDark = document.getElementById('themeIconDark');
+    const themeIconLight = document.getElementById('themeIconLight');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      if (isDark) {
+        themeIconDark.classList.add('hidden');
+        themeIconLight.classList.remove('hidden');
+        document.body.classList.remove('bg-slate-100', 'text-slate-900');
+        document.body.classList.add('bg-slate-950', 'text-slate-100');
+      } else {
+        themeIconDark.classList.remove('hidden');
+        themeIconLight.classList.add('hidden');
+        document.body.classList.remove('bg-slate-950', 'text-slate-100');
+        document.body.classList.add('bg-slate-100', 'text-slate-900');
+      }
+    });
+
+    // Initialize counts on load
+    updateVisibility();
+  </script>
+</body>
+</html>
